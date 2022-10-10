@@ -12,8 +12,7 @@ function fetchCountries(event) {
       Notify.info('Too many matches found. Please enter a more specific name.'),
       ((refs.countryInfo.innerHTML = ''), (refs.countryList.innerHTML = ''))
     );
-  }
-  if (event.target.value !== '') {
+  } else if (event.target.value !== '') {
     return fetch(
       `https://restcountries.com/v3.1/name/${event.target.value
         .trim()
@@ -34,6 +33,13 @@ function fetchCountries(event) {
         if (countrys.length == 1 && countrys[0].name.common === 'Russia') {
           return (
             Notify.warning('Russia is a terrorist country'),
+            (refs.countryList.innerHTML = '')
+          );
+        } else if (countrys.length >= 11) {
+          return (
+            Notify.info(
+              'Too many matches found. Please enter a more specific name.'
+            ),
             (refs.countryList.innerHTML = '')
           );
         }
