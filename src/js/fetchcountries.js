@@ -1,18 +1,13 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { renderList } from './renderlist';
-const refs = {
+export const refs = {
   input: document.querySelector('#search-box'),
   countryList: document.querySelector('.country-list'),
   countryInfo: document.querySelector('.country-info'),
 };
 
-function fetchCountries(event) {
-  if (refs.input.value.length <= 1) {
-    return (
-      Notify.info('Too many matches found. Please enter a more specific name.'),
-      ((refs.countryInfo.innerHTML = ''), (refs.countryList.innerHTML = ''))
-    );
-  } else if (event.target.value !== '') {
+export function fetchCountries(event) {
+  if (event.target.value.trim() !== '') {
     return fetch(
       `https://restcountries.com/v3.1/name/${event.target.value
         .trim()
@@ -30,23 +25,8 @@ function fetchCountries(event) {
         return response.json();
       })
       .then(countrys => {
-        if (countrys.length == 1 && countrys[0].name.common === 'Russia') {
-          return (
-            Notify.warning('Russia is a terrorist country'),
-            (refs.countryList.innerHTML = '')
-          );
-        } else if (countrys.length >= 11) {
-          return (
-            Notify.info(
-              'Too many matches found. Please enter a more specific name.'
-            ),
-            (refs.countryList.innerHTML = '')
-          );
-        }
         renderList(countrys);
       })
       .catch(error => console.log(error));
   }
 }
-
-export { refs, fetchCountries };

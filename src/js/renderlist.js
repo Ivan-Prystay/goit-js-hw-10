@@ -1,4 +1,6 @@
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { refs } from './fetchcountries';
+
 export function renderList(countrys) {
   let markup = '';
   if (countrys.length == 1) {
@@ -37,5 +39,17 @@ export function renderList(countrys) {
       .join('');
     refs.countryList.innerHTML = markup;
     refs.countryInfo.innerHTML = '';
+  } else if (countrys.length >= 11) {
+    return Notify.info(
+      'Too many matches found. Please enter a more specific name.',
+      (refs.countryList.innerHTML = ''),
+      (refs.countryInfo.innerHTML = '')
+    );
+  }
+  if (countrys.length == 1 && countrys[0].name.common === 'Russia') {
+    return (
+      Notify.warning('Russia is a terrorist country'),
+      ((refs.countryList.innerHTML = ''), (refs.countryInfo.innerHTML = ''))
+    );
   }
 }
